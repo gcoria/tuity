@@ -26,12 +26,12 @@ func (s *FollowService) FollowUser(followerID, followedID string) (*domain.Follo
 		return nil, errors.NewValidationError("invalid follow data")
 	}
 
-	follower, err := findUser(followerID, s.userRepo)
+	follower, err := s.userRepo.FindByID(followerID)
 	if err != nil {
 		return nil, err
 	}
 
-	followed, err := findUser(followedID, s.userRepo)
+	followed, err := s.userRepo.FindByID(followedID)
 	if err != nil {
 		return nil, err
 	}
@@ -74,7 +74,7 @@ func (s *FollowService) GetFollowing(userID string) ([]*domain.Follow, error) {
 		return nil, errors.NewValidationError("user ID cannot be empty")
 	}
 
-	user, err := findUser(userID, s.userRepo)
+	user, err := s.userRepo.FindByID(userID)
 	if err != nil {
 		return nil, err
 	}
@@ -87,7 +87,7 @@ func (s *FollowService) GetFollowers(userID string) ([]*domain.Follow, error) {
 		return nil, errors.NewValidationError("user ID cannot be empty")
 	}
 
-	user, err := findUser(userID, s.userRepo)
+	user, err := s.userRepo.FindByID(userID)
 	if err != nil {
 		return nil, err
 	}
@@ -106,18 +106,4 @@ func (s *FollowService) IsFollowing(followerID, followeeID string) (bool, error)
 	}
 
 	return true, nil
-}
-
-// -----------------
-//
-//	Helper functions
-//
-// -----------------
-
-func findUser(userID string, userRepo ports.UserRepository) (*domain.User, error) {
-	user, err := userRepo.FindByID(userID)
-	if err != nil {
-		return nil, errors.NewNotFoundError("user")
-	}
-	return user, nil
 }
