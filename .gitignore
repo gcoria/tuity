@@ -48,7 +48,6 @@ logs/
 build/
 dist/
 bin/
-pkg/
 
 # Coverage reports
 coverage.html
