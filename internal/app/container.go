@@ -50,6 +50,7 @@ func NewContainer() *Container {
 	userHandler := handlers.NewUserHandler(userService)
 	tweetHandler := handlers.NewTweetHandler(tweetService)
 	followHandler := handlers.NewFollowHandler(followService)
+	timelineHandler := handlers.NewTimelineHandler(timelineService)
 
 	return &Container{
 		IDGenerator:     idGenerator,
@@ -64,5 +65,6 @@ func NewContainer() *Container {
 		UserHandler:     userHandler,
 		TweetHandler:    tweetHandler,
 		FollowHandler:   followHandler,
+		TimelineHandler: timelineHandler,
 	}
 }
