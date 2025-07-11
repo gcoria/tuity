@@ -24,24 +24,31 @@ type Container struct {
 	TimelineService *services.TimelineService
 
 	// Driving Adapters
-	UserHandler *handlers.UserHandler
+	UserHandler     *handlers.UserHandler
+	TweetHandler    *handlers.TweetHandler
+	FollowHandler   *handlers.FollowHandler
+	TimelineHandler *handlers.TimelineHandler
 }
 
 func NewContainer() *Container {
 
 	idGenerator := utils.NewIDGenerator()
 
+	// Create repositories
 	userRepo := memory.NewUserMemoryRepository()
 	tweetRepo := memory.NewTweetMemoryRepository()
 	followRepo := memory.NewFollowMemoryRepository()
 	timelineRepo := memory.NewTimelineMemoryRepository()
 
+	// Create services
 	userService := services.NewUserService(userRepo, idGenerator)
 	tweetService := services.NewTweetService(tweetRepo, userRepo, idGenerator)
 	followService := services.NewFollowService(followRepo, userRepo, idGenerator)
 	timelineService := services.NewTimelineService(tweetRepo, followRepo, timelineRepo, userRepo)
 
+	// Create handlers
 	userHandler := handlers.NewUserHandler(userService)
+	tweetHandler := handlers.NewTweetHandler(tweetService)
 
 	return &Container{
 		IDGenerator:     idGenerator,
@@ -54,5 +61,6 @@ func NewContainer() *Container {
 		FollowService:   followService,
 		TimelineService: timelineService,
 		UserHandler:     userHandler,
+		TweetHandler:    tweetHandler,
 	}
 }

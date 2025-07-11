@@ -28,7 +28,7 @@ func (tl *Timeline) AddTweets(tweets []*Tweet) {
 }
 
 func (tl *Timeline) GetTweets(limit int) []*Tweet {
-	if limit <= 0 || limit >= len(tl.Tweets) {
+	if limit >= len(tl.Tweets) {
 		return tl.Tweets
 	}
 	return tl.Tweets[:limit]
