@@ -24,7 +24,6 @@ param, body o por donde crea más conveniente.
 Criterios de evaluación
 ● Armar documentación high level de la arquitectura y los componentes usados en
 la aplicación.
-
 ● La elección del lenguaje es libre. Podes elegir la tecnología que prefieras para
 implementarlo, ya sea utilizando un lenguaje de programación específico o un
 framework de desarrollo. A nivel infraestructura y protocolos es lo mismo, solo
@@ -45,7 +44,5 @@ son bienvenidos pero no requeridos.
 
 ### Roadmap
 
-- Arquitectura, tener en cuenta escalabilidad para la transicion desde el mvp a millones de usuarios
-- Completar business.txt
 - Docu, Scaffolding, Roadmap implementacion + tests
 - Sumar Docker, Postman, Setup Local

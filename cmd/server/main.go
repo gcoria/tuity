@@ -43,5 +43,22 @@ func printEndpoints() {
 	fmt.Println("  GET    /api/v1/users/:id")
 	fmt.Println("  GET    /api/v1/users/:username")
 
-	fmt.Println("\nAuthentication: Include 'X-User-ID' header for protected endpoints")
+	fmt.Println("\nTweets:")
+	fmt.Println("  POST   /api/v1/tweets")
+	fmt.Println("  GET    /api/v1/tweets/:id")
+	fmt.Println("  DELETE /api/v1/tweets/:id")
+	fmt.Println("  GET    /api/v1/users/:id/tweets")
+
+	fmt.Println("\nFollow:")
+	fmt.Println("  POST   /api/v1/users/:id/follow")
+	fmt.Println("  DELETE /api/v1/users/:id/follow")
+	fmt.Println("  GET    /api/v1/users/:id/following")
+	fmt.Println("  GET    /api/v1/users/:id/followers")
+	fmt.Println("  GET    /api/v1/users/:id/following/:targetId")
+
+	fmt.Println("\nTimeline:")
+	fmt.Println("  GET    /api/v1/users/:id/timeline")
+	fmt.Println("  POST   /api/v1/users/:id/timeline/refresh")
+
+	fmt.Println("\n💡 Authentication: Include 'X-User-ID' header for protected endpoints")
 }

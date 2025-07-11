@@ -7,8 +7,8 @@ import (
 )
 
 type UserMemoryRepository struct {
-	users       map[string]*domain.User
-	usersByName map[string]*domain.User
+	users       map[string]*domain.User // Indexed by ID
+	usersByName map[string]*domain.User // Indexed by username
 	mutex       sync.RWMutex
 }
 

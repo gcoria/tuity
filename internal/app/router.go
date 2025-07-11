@@ -20,12 +20,21 @@ func SetupRouter(container *Container) *gin.Engine {
 		{
 			users.POST("", container.UserHandler.CreateUser)
 			users.GET("/:id", container.UserHandler.GetUser)
-			users.GET("/:username", container.UserHandler.GetUserByUsername)
+			users.GET("/username/:username", container.UserHandler.GetUserByUsername)
+
+			users.GET("/:id/tweets", container.TweetHandler.GetUserTweets)
 
 		}
 
+		tweets := v1.Group("/tweets")
+		{
+			tweets.POST("", container.TweetHandler.CreateTweet)
+			tweets.GET("/:id", container.TweetHandler.GetTweet)
+			tweets.DELETE("/:id", container.TweetHandler.DeleteTweet)
+		}
 	}
 
+	// Health check endpoint
 	router.GET("/health", func(c *gin.Context) {
 		c.JSON(200, gin.H{
 			"status":  "healthy",
@@ -36,6 +45,7 @@ func SetupRouter(container *Container) *gin.Engine {
 	return router
 }
 
+// corsMiddleware adds CORS headers for frontend development
 func corsMiddleware() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		c.Writer.Header().Set("Access-Control-Allow-Origin", "*")
