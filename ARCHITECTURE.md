@@ -73,7 +73,7 @@ type EventPort interface {}
 - **Cache Adapter**: KVS in memory
 - **Event Adapter**: event bus in memory
 
-## 5. Scalable Architecture (Wip Miro)
+## 5. [WIP Miro] Scalable Architecture
 
 ### Requirements / Issues to think
 

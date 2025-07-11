@@ -1,26 +1,24 @@
 # Business Assumptions for Tuity
 
-## Core Assumptions (from README)
+## Core Assumptions
 - All users are valid, no signup/signin module required
 - User identification via header, param, or body
 - Solution must scale to millions of users
 - Application optimized for read operations
 
-## Additional Business Assumptions
 
 ### User Management
-- User IDs are globally unique strings (UUID recommended)
 - User profiles are minimal (ID, username, display name)
 - No user authentication/authorization required for MVP
 - User data is eventually consistent across services
 
 ### Tweet Management
 - Tweet character limit: 280 characters
-- Tweet content is plain text only (no media for MVP)
+- Tweet content is plain text only
 - Tweet IDs are globally unique
-- Tweets are immutable once posted (no editing)
-- Tweet deletion is soft delete (marked as deleted)
-- Tweets are public by default (no privacy controls)
+- Tweets cannot be edited
+- Tweet deletion is soft delete
+- Tweets are public by default
 
 ### Follow System
 - Users can follow unlimited number of other users
@@ -30,78 +28,44 @@
 - Self-following is not allowed
 
 ### Timeline Generation
-- Timeline shows tweets in reverse chronological order
-- Timeline pagination via cursor-based pagination
 - Default timeline limit: 20 tweets per request
 - Timeline refresh frequency: real-time for active users
-- Timeline caching TTL: 5 minutes for active users
+- Timeline caching TTL: 5 minutes
 
-### Performance Requirements
-- API response time: < 200ms for 95th percentile
-- Tweet creation latency: < 100ms
-- Timeline generation: < 500ms for users with < 1000 follows
-- System availability: 99.9% uptime
-- Read-to-write ratio: 100:1 (heavy read workload)
+# MVP Assumptions
 
 ### Rate Limiting (MVP)
 - Tweet creation: 10 tweets per minute per user
 - Follow operations: 20 follows per minute per user
 - Timeline requests: 100 requests per minute per user
 - Rate limiting uses token bucket algorithm
-- Rate limits are per-user, not global
-- Exceeded rate limits return HTTP 429 status
+- Rate limits are per user
 
 ### Timeline Generation Strategy (MVP)
 - Simple push model for all users
-- Timeline pre-computation on tweet creation
-- Timeline cache expiration: 5 minutes
-- Fallback to pull model if cache miss
-- Asynchronous fan-out to prevent blocking tweet creation
+- Timeline cache expire in 5 minutes
 
 ### Event System (MVP)
-- In-memory event bus for decoupling
+- In-memory event bus
 - Asynchronous event processing
 - Event types: tweet_created, user_followed, user_unfollowed
-- Events used for timeline updates and notifications
-- Event interface designed for future Kafka migration
+
+
+# Final Solution Assumptions
 
 ### Scalability Assumptions
-- Expected user growth: 0 to 10M users over 2 years
+- Expected user growth: 0 to 10M user
 - Peak tweet rate: 10,000 tweets/second
 - Peak timeline requests: 100,000 requests/second
 - Celebrity users: up to 10M followers
 - Average user follows: 100-200 users
 
 ### Data Consistency
-- Eventually consistent reads acceptable
+- Eventually consistent on reads
 - Strong consistency for follow operations
 - Tweet creation must be immediately visible to author
-- Timeline updates can have up to 1 minute delay
-
-### Business Rules
-- No spam detection required for MVP
-- No content moderation for MVP
-- No analytics tracking required for MVP
-- No rate limiting per user for MVP
-- No trending topics or recommendations
-
-### Error Handling
-- Graceful degradation during high load
-- Timeline falls back to cached version if generation fails
-- Tweet creation failure should not affect user experience
-- Follow operations are best-effort (eventual consistency)
 
 ### Monitoring & Observability
-- All business operations must be logged
 - Performance metrics tracked for all endpoints
 - Error rates monitored with alerting
-- Business metrics: DAU, tweets/day, follows/day
-
-### Future Considerations
-- Media support (images, videos) in next version
-- Real-time notifications system
-- Direct messaging capability
-- Search functionality
-- Content recommendation algorithms
-- Mobile app support
-- Multi-language support
+- Business metrics: tweets/day, follows/day, etc
