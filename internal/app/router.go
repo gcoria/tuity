@@ -24,6 +24,12 @@ func SetupRouter(container *Container) *gin.Engine {
 
 			users.GET("/:id/tweets", container.TweetHandler.GetUserTweets)
 
+			users.POST("/:id/follow", container.FollowHandler.FollowUser)
+			users.DELETE("/:id/follow", container.FollowHandler.UnfollowUser)
+
+			users.GET("/:id/following", container.FollowHandler.GetFollowing)
+			users.GET("/:id/followers", container.FollowHandler.GetFollowers)
+			users.GET("/:id/following/:targetId", container.FollowHandler.IsFollowing)
 		}
 
 		tweets := v1.Group("/tweets")
