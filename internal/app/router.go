@@ -24,6 +24,9 @@ func SetupRouter(container *Container) *gin.Engine {
 
 			users.GET("/:id/tweets", container.TweetHandler.GetUserTweets)
 
+			users.GET("/:id/timeline", container.TimelineHandler.GetTimeline)
+			users.POST("/:id/timeline/refresh", container.TimelineHandler.RefreshTimeline)
+
 			users.POST("/:id/follow", container.FollowHandler.FollowUser)
 			users.DELETE("/:id/follow", container.FollowHandler.UnfollowUser)
 
@@ -32,6 +35,7 @@ func SetupRouter(container *Container) *gin.Engine {
 			users.GET("/:id/following/:targetId", container.FollowHandler.IsFollowing)
 		}
 
+		// Tweet routes
 		tweets := v1.Group("/tweets")
 		{
 			tweets.POST("", container.TweetHandler.CreateTweet)
