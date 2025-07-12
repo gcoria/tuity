@@ -31,7 +31,6 @@ type Container struct {
 }
 
 func NewContainer() *Container {
-
 	idGenerator := utils.NewIDGenerator()
 
 	// Create repositories
@@ -50,7 +49,7 @@ func NewContainer() *Container {
 	userHandler := handlers.NewUserHandler(userService)
 	tweetHandler := handlers.NewTweetHandler(tweetService)
 	followHandler := handlers.NewFollowHandler(followService)
-	timelineHandler := handlers.NewTimelineHandler(timelineService)
+	timelineHandler := handlers.NewTimelineHandler(timelineService, 10, 50)
 
 	return &Container{
 		IDGenerator:     idGenerator,
