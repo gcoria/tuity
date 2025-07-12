@@ -16,6 +16,7 @@ type Container struct {
 	TweetRepo    ports.TweetRepository
 	FollowRepo   ports.FollowRepository
 	TimelineRepo ports.TimelineRepository
+	Cache        ports.CacheRepository
 
 	// Core Business Logic
 	UserService     *services.UserService
@@ -38,12 +39,13 @@ func NewContainer() *Container {
 	tweetRepo := memory.NewTweetMemoryRepository()
 	followRepo := memory.NewFollowMemoryRepository()
 	timelineRepo := memory.NewTimelineMemoryRepository()
+	cache := memory.NewCacheMemoryRepository()
 
 	// Create services
 	userService := services.NewUserService(userRepo, idGenerator)
 	tweetService := services.NewTweetService(tweetRepo, userRepo, idGenerator)
 	followService := services.NewFollowService(followRepo, userRepo, idGenerator)
-	timelineService := services.NewTimelineService(tweetRepo, followRepo, timelineRepo, userRepo)
+	timelineService := services.NewTimelineService(tweetRepo, followRepo, timelineRepo, userRepo, cache)
 
 	// Create handlers
 	userHandler := handlers.NewUserHandler(userService)
@@ -57,6 +59,7 @@ func NewContainer() *Container {
 		TweetRepo:       tweetRepo,
 		FollowRepo:      followRepo,
 		TimelineRepo:    timelineRepo,
+		Cache:           cache,
 		UserService:     userService,
 		TweetService:    tweetService,
 		FollowService:   followService,
