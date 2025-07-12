@@ -5,17 +5,22 @@ import (
 	"strconv"
 	"tuity/internal/adapters/driving/http/dto"
 	"tuity/internal/core/services"
+	"tuity/pkg/errors"
 
 	"github.com/gin-gonic/gin"
 )
 
 type TimelineHandler struct {
 	timelineService *services.TimelineService
+	defaultLimit    int
+	maxLimit        int
 }
 
-func NewTimelineHandler(timelineService *services.TimelineService) *TimelineHandler {
+func NewTimelineHandler(timelineService *services.TimelineService, defaultLimit, maxLimit int) *TimelineHandler {
 	return &TimelineHandler{
 		timelineService: timelineService,
+		defaultLimit:    defaultLimit,
+		maxLimit:        maxLimit,
 	}
 }
 
@@ -23,18 +28,18 @@ func NewTimelineHandler(timelineService *services.TimelineService) *TimelineHand
 func (h *TimelineHandler) GetTimeline(c *gin.Context) {
 	userID := c.Param("id")
 
-	limitStr := c.DefaultQuery("limit", "20")
+	limitStr := c.DefaultQuery("limit", strconv.Itoa(h.defaultLimit))
 	limit, err := strconv.Atoi(limitStr)
 	if err != nil {
-		c.JSON(http.StatusBadRequest, dto.NewErrorResponse("validation_error", "Invalid limit parameter", err.Error()))
+		c.Error(errors.NewValidationError("Invalid limit parameter: " + err.Error()))
 		return
 	}
 
-	limit = setLimit(limit)
+	limit = h.setLimit(limit)
 
 	timeline, err := h.timelineService.GetTimeline(userID, limit)
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, dto.NewErrorResponse("internal_server_error", "Failed to get timeline", err.Error()))
+		c.Error(err)
 		return
 	}
 
@@ -48,19 +53,19 @@ func (h *TimelineHandler) RefreshTimeline(c *gin.Context) {
 
 	err := h.timelineService.RefreshTimeline(userID)
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, dto.NewErrorResponse("internal_server_error", "Failed to refresh timeline", err.Error()))
+		c.Error(err)
 		return
 	}
 
 	c.JSON(http.StatusOK, gin.H{"message": "Timeline refreshed successfully"})
 }
 
-func setLimit(limit int) int {
+func (h *TimelineHandler) setLimit(limit int) int {
 	if limit <= 0 {
-		limit = 20
+		limit = h.defaultLimit
 	}
-	if limit > 100 {
-		limit = 100
+	if limit > h.maxLimit {
+		limit = h.maxLimit
 	}
 	return limit
 }

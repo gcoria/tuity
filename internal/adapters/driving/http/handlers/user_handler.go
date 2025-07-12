@@ -4,6 +4,7 @@ import (
 	"net/http"
 	"tuity/internal/adapters/driving/http/dto"
 	"tuity/internal/core/services"
+	"tuity/pkg/errors"
 
 	"github.com/gin-gonic/gin"
 )
@@ -22,7 +23,7 @@ func NewUserHandler(userService *services.UserService) *UserHandler {
 func (h *UserHandler) CreateUser(c *gin.Context) {
 	var req dto.CreateUserRequest
 	if err := c.ShouldBindJSON(&req); err != nil {
-		c.JSON(http.StatusBadRequest, dto.NewErrorResponse("validation_error", "Invalid request data", err.Error()))
+		c.Error(errors.NewValidationError("Invalid request data: " + err.Error()))
 		return
 	}
 

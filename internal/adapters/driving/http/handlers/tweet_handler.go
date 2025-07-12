@@ -4,6 +4,7 @@ import (
 	"net/http"
 	"tuity/internal/adapters/driving/http/dto"
 	"tuity/internal/core/services"
+	"tuity/pkg/errors"
 
 	"github.com/gin-gonic/gin"
 )
@@ -22,19 +23,19 @@ func NewTweetHandler(tweetService *services.TweetService) *TweetHandler {
 func (h *TweetHandler) CreateTweet(c *gin.Context) {
 	userID := c.GetHeader("X-User-ID")
 	if userID == "" {
-		c.JSON(http.StatusUnauthorized, dto.NewErrorResponse("unauthorized", "User ID required in X-User-ID header", ""))
+		c.Error(errors.NewValidationError("User ID required in X-User-ID header"))
 		return
 	}
 
 	var req dto.CreateTweetRequest
 	if err := c.ShouldBindJSON(&req); err != nil {
-		c.JSON(http.StatusBadRequest, dto.NewErrorResponse("validation_error", "Invalid request data", err.Error()))
+		c.Error(errors.NewValidationError("Invalid request data: " + err.Error()))
 		return
 	}
 
 	tweet, err := h.tweetService.CreateTweet(userID, req.Content)
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, dto.NewErrorResponse("internal_server_error", "Failed to create tweet", err.Error()))
+		c.Error(err)
 		return
 	}
 
@@ -48,7 +49,7 @@ func (h *TweetHandler) GetTweet(c *gin.Context) {
 
 	tweet, err := h.tweetService.GetTweet(tweetID)
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, dto.NewErrorResponse("internal_server_error", "Failed to get tweet", err.Error()))
+		c.Error(err)
 		return
 	}
 
@@ -62,7 +63,7 @@ func (h *TweetHandler) GetUserTweets(c *gin.Context) {
 
 	tweets, err := h.tweetService.GetUserTweets(userID)
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, dto.NewErrorResponse("internal_server_error", "Failed to get user tweets", err.Error()))
+		c.Error(err)
 		return
 	}
 
@@ -74,7 +75,7 @@ func (h *TweetHandler) GetUserTweets(c *gin.Context) {
 func (h *TweetHandler) DeleteTweet(c *gin.Context) {
 	userID := c.GetHeader("X-User-ID")
 	if userID == "" {
-		c.JSON(http.StatusUnauthorized, dto.NewErrorResponse("unauthorized", "User ID required in X-User-ID header", ""))
+		c.Error(errors.NewValidationError("User ID required in X-User-ID header"))
 		return
 	}
 
@@ -82,7 +83,7 @@ func (h *TweetHandler) DeleteTweet(c *gin.Context) {
 
 	err := h.tweetService.DeleteTweet(tweetID, userID)
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, dto.NewErrorResponse("internal_server_error", "Failed to delete tweet", err.Error()))
+		c.Error(err)
 		return
 	}
 
