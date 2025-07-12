@@ -4,6 +4,7 @@ import (
 	"net/http"
 	"tuity/internal/adapters/driving/http/dto"
 	"tuity/internal/core/services"
+	"tuity/pkg/errors"
 
 	"github.com/gin-gonic/gin"
 )
@@ -22,7 +23,7 @@ func NewFollowHandler(followService *services.FollowService) *FollowHandler {
 func (h *FollowHandler) FollowUser(c *gin.Context) {
 	followerID := c.GetHeader("X-User-ID")
 	if followerID == "" {
-		c.JSON(http.StatusUnauthorized, dto.NewErrorResponse("unauthorized", "User ID required in X-User-ID header", ""))
+		c.Error(errors.NewValidationError("User ID required in X-User-ID header"))
 		return
 	}
 
@@ -30,7 +31,7 @@ func (h *FollowHandler) FollowUser(c *gin.Context) {
 
 	follow, err := h.followService.FollowUser(followerID, followeeID)
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, dto.NewErrorResponse("internal_server_error", "Failed to follow user", err.Error()))
+		c.Error(err)
 		return
 	}
 
@@ -42,7 +43,7 @@ func (h *FollowHandler) FollowUser(c *gin.Context) {
 func (h *FollowHandler) UnfollowUser(c *gin.Context) {
 	followerID := c.GetHeader("X-User-ID")
 	if followerID == "" {
-		c.JSON(http.StatusUnauthorized, dto.NewErrorResponse("unauthorized", "User ID required in X-User-ID header", ""))
+		c.Error(errors.NewValidationError("User ID required in X-User-ID header"))
 		return
 	}
 
@@ -50,7 +51,7 @@ func (h *FollowHandler) UnfollowUser(c *gin.Context) {
 
 	err := h.followService.UnfollowUser(followerID, followedID)
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, dto.NewErrorResponse("internal_server_error", "Failed to unfollow user", err.Error()))
+		c.Error(err)
 		return
 	}
 
@@ -63,7 +64,7 @@ func (h *FollowHandler) GetFollowing(c *gin.Context) {
 
 	follows, err := h.followService.GetFollowing(userID)
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, dto.NewErrorResponse("internal_server_error", "Failed to get following", err.Error()))
+		c.Error(err)
 		return
 	}
 
@@ -71,13 +72,13 @@ func (h *FollowHandler) GetFollowing(c *gin.Context) {
 	c.JSON(http.StatusOK, responses)
 }
 
-// GetFollowers handles GET /users/:id/followers
+// GET /users/:id/followers
 func (h *FollowHandler) GetFollowers(c *gin.Context) {
 	userID := c.Param("id")
 
 	follows, err := h.followService.GetFollowers(userID)
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, dto.NewErrorResponse("internal_server_error", "Failed to get followers", err.Error()))
+		c.Error(err)
 		return
 	}
 
@@ -85,19 +86,17 @@ func (h *FollowHandler) GetFollowers(c *gin.Context) {
 	c.JSON(http.StatusOK, responses)
 }
 
-// IsFollowing handles GET /users/:id/following/:targetId
+// GET /users/:id/following/:targetId
 func (h *FollowHandler) IsFollowing(c *gin.Context) {
 	followerID := c.Param("id")
 	followeeID := c.Param("targetId")
 
-	// Call business logic
 	isFollowing, err := h.followService.IsFollowing(followerID, followeeID)
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, dto.NewErrorResponse("internal_server_error", "Failed to check if following", err.Error()))
+		c.Error(err)
 		return
 	}
 
-	// Return response
 	response := map[string]bool{"is_following": isFollowing}
 	c.JSON(http.StatusOK, response)
 }
