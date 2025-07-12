@@ -12,7 +12,10 @@ func main() {
 	fmt.Println("🚀 Starting Tuity")
 	fmt.Println("=====================================")
 
-	gin.SetMode(gin.ReleaseMode)
+	// Load configuration
+	config := app.LoadConfig()
+
+	gin.SetMode(config.Server.Mode)
 
 	fmt.Println("Initializing dependencies...")
 	container := app.NewContainer()
@@ -20,20 +23,19 @@ func main() {
 	fmt.Println("Setting up routes...")
 	router := app.SetupRouter(container)
 
-	printEndpoints()
+	printEndpoints(config.Server.Port)
 
-	port := "8080"
-	fmt.Printf("Server starting on port %s...\n", port)
-	fmt.Printf("API URL: http://localhost:%s/api/v1\n", port)
-	fmt.Printf("Health Check: http://localhost:%s/health\n", port)
+	fmt.Printf("Server starting on port %s...\n", config.Server.Port)
+	fmt.Printf("API URL: http://localhost:%s/api/v1\n", config.Server.Port)
+	fmt.Printf("Health Check: http://localhost:%s/health\n", config.Server.Port)
 	fmt.Println("=====================================")
 
-	if err := router.Run(":" + port); err != nil {
+	if err := router.Run(":" + config.Server.Port); err != nil {
 		log.Fatal("Failed to start server:", err)
 	}
 }
 
-func printEndpoints() {
+func printEndpoints(port string) {
 	fmt.Println("\nAvailable Endpoints:")
 	fmt.Println("Health:")
 	fmt.Println("  GET    /health")
@@ -61,4 +63,5 @@ func printEndpoints() {
 	fmt.Println("  POST   /api/v1/users/:id/timeline/refresh")
 
 	fmt.Println("\n💡 Authentication: Include 'X-User-ID' header for protected endpoints")
+	fmt.Printf("🔧 Environment: %s\n", gin.Mode())
 }

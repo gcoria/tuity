@@ -7,6 +7,7 @@ import (
 )
 
 func SetupRouter(container *Container) *gin.Engine {
+	config := LoadConfig()
 	router := gin.Default()
 
 	router.Use(gin.Logger())
@@ -24,38 +25,44 @@ func SetupRouter(container *Container) *gin.Engine {
 
 			users.GET("/:id/tweets", container.TweetHandler.GetUserTweets)
 
-			users.GET("/:id/timeline", container.TimelineHandler.GetTimeline)
-			users.POST("/:id/timeline/refresh", container.TimelineHandler.RefreshTimeline)
+			timelineGroup := users.Group("")
+			timelineGroup.Use(middleware.TimelineRequestRateLimit(config.RateLimit.TimelineRequestLimit))
+			{
+				timelineGroup.GET("/:id/timeline", container.TimelineHandler.GetTimeline)
+				timelineGroup.POST("/:id/timeline/refresh", container.TimelineHandler.RefreshTimeline)
+			}
 
-			users.POST("/:id/follow", container.FollowHandler.FollowUser)
-			users.DELETE("/:id/follow", container.FollowHandler.UnfollowUser)
+			followGroup := users.Group("")
+			followGroup.Use(middleware.FollowOperationRateLimit(config.RateLimit.FollowOperationLimit))
+			{
+				followGroup.POST("/:id/follow", container.FollowHandler.FollowUser)
+				followGroup.DELETE("/:id/follow", container.FollowHandler.UnfollowUser)
+			}
 
 			users.GET("/:id/following", container.FollowHandler.GetFollowing)
 			users.GET("/:id/followers", container.FollowHandler.GetFollowers)
 			users.GET("/:id/following/:targetId", container.FollowHandler.IsFollowing)
 		}
 
-		// Tweet routes
 		tweets := v1.Group("/tweets")
 		{
-			tweets.POST("", container.TweetHandler.CreateTweet)
+			tweets.POST("", middleware.TweetCreateRateLimit(config.RateLimit.TweetCreateLimit), container.TweetHandler.CreateTweet)
 			tweets.GET("/:id", container.TweetHandler.GetTweet)
 			tweets.DELETE("/:id", container.TweetHandler.DeleteTweet)
 		}
 	}
 
-	// Health check endpoint
 	router.GET("/health", func(c *gin.Context) {
 		c.JSON(200, gin.H{
 			"status":  "healthy",
 			"service": "tuity-api",
+			"version": "1.0.0",
 		})
 	})
 
 	return router
 }
 
-// corsMiddleware adds CORS headers for frontend development
 func corsMiddleware() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		c.Writer.Header().Set("Access-Control-Allow-Origin", "*")

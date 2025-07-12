@@ -10,6 +10,7 @@ import (
 
 type Container struct {
 	IDGenerator *utils.IDGenerator
+	Config      *Config
 
 	//Driven Adapters
 	UserRepo     ports.UserRepository
@@ -32,6 +33,7 @@ type Container struct {
 }
 
 func NewContainer() *Container {
+	config := LoadConfig()
 	idGenerator := utils.NewIDGenerator()
 
 	// Create repositories
@@ -39,7 +41,7 @@ func NewContainer() *Container {
 	tweetRepo := memory.NewTweetMemoryRepository()
 	followRepo := memory.NewFollowMemoryRepository()
 	timelineRepo := memory.NewTimelineMemoryRepository()
-	cache := memory.NewCacheMemoryRepository()
+	cache := memory.NewCacheMemoryRepository() // Add cache
 
 	// Create services
 	userService := services.NewUserService(userRepo, idGenerator)
@@ -51,10 +53,11 @@ func NewContainer() *Container {
 	userHandler := handlers.NewUserHandler(userService)
 	tweetHandler := handlers.NewTweetHandler(tweetService)
 	followHandler := handlers.NewFollowHandler(followService)
-	timelineHandler := handlers.NewTimelineHandler(timelineService, 10, 50)
+	timelineHandler := handlers.NewTimelineHandler(timelineService, config.Timeline.DefaultLimit, config.Timeline.MaxLimit)
 
 	return &Container{
 		IDGenerator:     idGenerator,
+		Config:          config,
 		UserRepo:        userRepo,
 		TweetRepo:       tweetRepo,
 		FollowRepo:      followRepo,
