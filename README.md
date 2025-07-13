@@ -37,7 +37,7 @@ make run
 
 The API will be available at `http://localhost:8080`
 
-## 🐳 Docker Deployment
+## 🐳 Docker
 
 ```bash
 # Build and run
