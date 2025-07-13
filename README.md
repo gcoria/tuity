@@ -93,6 +93,10 @@ POST /api/v1/users/{id}/timeline/refresh   # Refresh timeline
 
 #### Import postman collection 
 
+```bash
+Tuity.postman_collection.json
+```
+
 #### Curl
 ```bash
 # Create a user
