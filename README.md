@@ -1,48 +1,124 @@
-Tuity like twitter but tiny
+# Tuity - like twitter but tiny
 
-### Requirimientos Core
+## 🚀 Features
 
-Tweets
-● Los usuarios deben poder publicar mensajes cortos (tweets) que no excedan un
-límite de caracteres (por ejemplo, 280 caracteres).
+- **Tweet Management**: Create, read, delete tweets (280 character limit)
+- **Follow System**: Follow/unfollow users with asymmetric relationships
+- **Timeline Generation**: Personalized timeline with cached results
+- **Rate Limiting**: Token bucket algorithm implementation
+- **Hexagonal Architecture**
+- **Docker Support**
 
-Follow:
-● Los usuarios deben poder seguir a otros usuarios.
+## 🏗️ Architecture
 
-Timeline:
-● Deben poder ver una línea de tiempo que muestre los tweets de los usuarios a los
-que siguen.
+This project follows hexagonal architecture with:
 
-### Assumptions
+- **Core Domain**: Pure business logic (User, Tweet, Follow, Timeline)
+- **Application Services**: Use cases and business workflows
+- **Ports**: Interfaces for external interactions
+- **Adapters**: External integrations (HTTP, Database, Cache)
 
-● Todos los usuarios son válidos, no es necesario crear un módulo de signin ni
-manejar sesiones. Se puede enviar el identificador de un usuario por header,
-param, body o por donde crea más conveniente.
-● Pensar una solución que pueda escalar a millones de usuarios.
-● La aplicación tiene que estar optimizada para lecturas.
+## 🚦 Getting Started
 
-Criterios de evaluación
-● Armar documentación high level de la arquitectura y los componentes usados en
-la aplicación.
-● La elección del lenguaje es libre. Podes elegir la tecnología que prefieras para
-implementarlo, ya sea utilizando un lenguaje de programación específico o un
-framework de desarrollo. A nivel infraestructura y protocolos es lo mismo, solo
-tiene que estar especificada en el documento high level. Ej: serverless, docker,
-kubernetes, message brokers, queues, bases de datos, cache, load balancers,
-gateways, grpc, websockets, etc.
-● No hay que desarrollar un front end.
-● Se pueden sumar assumption a los definidos y dejarlos plasmado en un archivo
-business.txt
-● Nos interesa mucho la arquitectura interna y como están separados los layers.
-Clean architecture, DDD, arquitectura hexagonal, port and adapters, onion
-architecture, mvc, etc. Todas son válidas.
-● A fines de simplificar pueden implementar una db in memory pero debería estar
-especificado en el doc del diseño que motor o tipo de db usarían y porque.
-● Valoramos el testing, no es necesario que tenga 100% coverage, priorizamos los
-casos de usos principales. Test funcionales, de integración o aceptación también
-son bienvenidos pero no requeridos.
+### Prerequisites
 
-### Roadmap
+- Go 1.23+
+- Docker (optional)
 
-- Docu, Scaffolding, Roadmap implementacion + tests
-- Sumar Docker, Postman, Setup Local
+### Quick Start
+
+```bash
+# Clone and run
+git clone [<repository-url>](https://github.com/gcoria/tuity)
+cd tuity
+go mod download
+make run
+```
+
+The API will be available at `http://localhost:8080`
+
+## 🐳 Docker Deployment
+
+```bash
+# Build and run
+make docker-build
+make docker-run
+
+# Development mode
+make docker-dev
+```
+
+## 📡 API Documentation
+
+### Authentication
+
+Include `X-User-ID` header for protected endpoints.
+
+### Key Endpoints
+
+#### Users
+
+```http
+POST /api/v1/users                    # Create user
+GET  /api/v1/users/{id}               # Get user by ID
+GET  /api/v1/users/username/{username} # Get user by username
+```
+
+#### Tweets
+
+```http
+POST   /api/v1/tweets          # Create tweet (requires X-User-ID)
+GET    /api/v1/tweets/{id}     # Get tweet
+DELETE /api/v1/tweets/{id}     # Delete tweet (requires X-User-ID)
+GET    /api/v1/users/{id}/tweets # Get user tweets
+```
+
+#### Follow System
+
+```http
+POST   /api/v1/users/{id}/follow        # Follow user (requires X-User-ID)
+DELETE /api/v1/users/{id}/follow        # Unfollow user (requires X-User-ID)
+GET    /api/v1/users/{id}/following     # Get following list
+GET    /api/v1/users/{id}/followers     # Get followers list
+```
+
+#### Timeline
+
+```http
+GET  /api/v1/users/{id}/timeline?limit=20  # Get timeline
+POST /api/v1/users/{id}/timeline/refresh   # Refresh timeline
+```
+
+### Example Usage
+
+```bash
+# Create a user
+curl -X POST http://localhost:8080/api/v1/users \
+  -H "Content-Type: application/json" \
+  -d '{"username": "alice", "display_name": "Alice Smith"}'
+
+# Create a tweet
+curl -X POST http://localhost:8080/api/v1/tweets \
+  -H "Content-Type: application/json" \
+  -H "X-User-ID: user-id-here" \
+  -d '{"content": "Hello world!"}'
+
+# Get timeline
+curl http://localhost:8080/api/v1/users/:user_id/timeline?limit=10
+```
+
+## 🧪 Testing
+
+```bash
+make test              # Run tests
+make test-coverage     # Run with coverage
+```
+
+## 🔮 Future Scalability[WIP]
+
+-**WIP scaling**: Database sharding, hashing, redis, cdn, rate limit, 1 million users
+
+- **Database**: PostgreSQL with proper indexing, sharding
+- **Cache**: Redis for distributed caching
+- **Message Queue**: RabbitMQ for async processing
+- **Load Balancing**: Multiple service instances
