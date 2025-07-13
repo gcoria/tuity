@@ -3,6 +3,7 @@ package middleware
 import (
 	"fmt"
 	"math"
+	"net/http"
 	"sync"
 	"time"
 
@@ -86,7 +87,7 @@ func RateLimitMiddleware(operation string, limit int) gin.HandlerFunc {
 		bucket := limiter.GetBucket(key, limit, limit)
 
 		if !bucket.Allow() {
-			c.JSON(429, gin.H{
+			c.JSON(http.StatusTooManyRequests, gin.H{
 				"error":   "validation_error",
 				"message": fmt.Sprintf("Rate limit exceeded for %s operation", operation),
 			})

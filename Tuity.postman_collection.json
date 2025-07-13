@@ -1,0 +1,1078 @@
+{
+	"info": {
+		"_postman_id": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
+		"name": "Tuity API",
+		"description": "A Twitter-like social media platform API built with Go and hexagonal architecture.\n\n## Features\n- Tweet Management (Create, Read, Delete)\n- Follow System (Follow/Unfollow users)\n- Timeline Generation (Personalized feeds)\n- Rate Limiting\n- User Management\n\n## Authentication\nInclude `X-User-ID` header for protected endpoints.\n\n## Environment Variables\n- `base_url`: API base URL (default: http://localhost:8080)\n- `user_id`: Current user ID for authenticated requests\n- `target_user_id`: Target user ID for operations\n- `tweet_id`: Tweet ID for tweet operations",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "12345678"
+	},
+	"item": [
+		{
+			"name": "Health Check",
+			"item": [
+				{
+					"name": "Health Check",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/health",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"health"
+							]
+						},
+						"description": "Check if the API service is healthy and running."
+					},
+					"response": [
+						{
+							"name": "Successful Health Check",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}/health",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"health"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [],
+							"cookie": [],
+							"body": "{\n  \"status\": \"healthy\",\n  \"service\": \"tuity-api\",\n  \"version\": \"1.0.0\"\n}"
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "Users",
+			"item": [
+				{
+					"name": "Create User",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"username\": \"diego\",\n  \"display_name\": \"Diego Maradona\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/v1/users",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"users"
+							]
+						},
+						"description": "Create a new user with username and display name."
+					},
+					"response": [
+						{
+							"name": "User Created Successfully",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"username\": \"diego\",\n  \"display_name\": \"Diego Maradona\"\n}"
+								},
+								"url": {
+									"raw": "{{base_url}}/api/v1/users",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"users"
+									]
+								}
+							},
+							"status": "Created",
+							"code": 201,
+							"_postman_previewlanguage": "json",
+							"header": [],
+							"cookie": [],
+							"body": "{\n  \"id\": \"user-1234567890\",\n  \"username\": \"diego\",\n  \"display_name\": \"Diego Maradona\",\n  \"created_at\": \"2024-01-01T10:00:00Z\"\n}"
+						}
+					]
+				},
+				{
+					"name": "Get User by ID",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/v1/users/{{user_id}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"users",
+								"{{user_id}}"
+							]
+						},
+						"description": "Retrieve a user by their unique ID."
+					},
+					"response": [
+						{
+							"name": "User Found",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}/api/v1/users/user-1234567890",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"users",
+										"user-1234567890"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [],
+							"cookie": [],
+							"body": "{\n  \"id\": \"user-1234567890\",\n  \"username\": \"diego\",\n  \"display_name\": \"Diego Maradona\",\n  \"created_at\": \"2024-01-01T10:00:00Z\"\n}"
+						}
+					]
+				},
+				{
+					"name": "Get User by Username",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/v1/users/username/diego",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"users",
+								"username",
+								"diego"
+							]
+						},
+						"description": "Retrieve a user by their username."
+					},
+					"response": [
+						{
+							"name": "User Found by Username",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}/api/v1/users/username/diego",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"users",
+										"username",
+										"diego"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [],
+							"cookie": [],
+							"body": "{\n  \"id\": \"user-1234567890\",\n  \"username\": \"diego\",\n  \"display_name\": \"Diego Maradona\",\n  \"created_at\": \"2024-01-01T10:00:00Z\"\n}"
+						}
+					]
+				},
+				{
+					"name": "Get User Tweets",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/v1/users/{{user_id}}/tweets",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"users",
+								"{{user_id}}",
+								"tweets"
+							]
+						},
+						"description": "Get all tweets by a specific user."
+					},
+					"response": [
+						{
+							"name": "User Tweets Retrieved",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}/api/v1/users/user-1234567890/tweets",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"users",
+										"user-1234567890",
+										"tweets"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [],
+							"cookie": [],
+							"body": "[\n  {\n    \"id\": \"tweet-1234567890\",\n    \"user_id\": \"user-1234567890\",\n    \"content\": \"Hello world! 🌍\",\n    \"created_at\": \"2024-01-01T10:30:00Z\",\n    \"is_deleted\": false\n  },\n  {\n    \"id\": \"tweet-0987654321\",\n    \"user_id\": \"user-1234567890\",\n    \"content\": \"Another tweet from el diego!\",\n    \"created_at\": \"2024-01-01T11:00:00Z\",\n    \"is_deleted\": false\n  }\n]"
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "Tweets",
+			"item": [
+				{
+					"name": "Create Tweet",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "X-User-ID",
+								"value": "{{user_id}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"content\": \"Hello world! 🌍 This is my first tweet on Tuity!\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/v1/tweets",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"tweets"
+							]
+						},
+						"description": "Create a new tweet. Requires X-User-ID header for authentication. Content must be 1-280 characters."
+					},
+					"response": [
+						{
+							"name": "Tweet Created Successfully",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									},
+									{
+										"key": "X-User-ID",
+										"value": "user-1234567890"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"content\": \"Hello world! 🌍 This is my first tweet on Tuity!\"\n}"
+								},
+								"url": {
+									"raw": "{{base_url}}/api/v1/tweets",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"tweets"
+									]
+								}
+							},
+							"status": "Created",
+							"code": 201,
+							"_postman_previewlanguage": "json",
+							"header": [],
+							"cookie": [],
+							"body": "{\n  \"id\": \"tweet-1234567890\",\n  \"user_id\": \"user-1234567890\",\n  \"content\": \"Hello world! 🌍 This is my first tweet on Tuity!\",\n  \"created_at\": \"2024-01-01T10:30:00Z\",\n  \"is_deleted\": false\n}"
+						}
+					]
+				},
+				{
+					"name": "Get Tweet by ID",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/v1/tweets/{{tweet_id}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"tweets",
+								"{{tweet_id}}"
+							]
+						},
+						"description": "Retrieve a specific tweet by its ID."
+					},
+					"response": [
+						{
+							"name": "Tweet Found",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}/api/v1/tweets/tweet-1234567890",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"tweets",
+										"tweet-1234567890"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [],
+							"cookie": [],
+							"body": "{\n  \"id\": \"tweet-1234567890\",\n  \"user_id\": \"user-1234567890\",\n  \"content\": \"Hello world! 🌍 This is my first tweet on Tuity!\",\n  \"created_at\": \"2024-01-01T10:30:00Z\",\n  \"is_deleted\": false\n}"
+						}
+					]
+				},
+				{
+					"name": "Delete Tweet",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "X-User-ID",
+								"value": "{{user_id}}"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/v1/tweets/{{tweet_id}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"tweets",
+								"{{tweet_id}}"
+							]
+						},
+						"description": "Delete a tweet. Requires X-User-ID header. Only the tweet author can delete their own tweets."
+					},
+					"response": [
+						{
+							"name": "Tweet Deleted Successfully",
+							"originalRequest": {
+								"method": "DELETE",
+								"header": [
+									{
+										"key": "X-User-ID",
+										"value": "user-1234567890"
+									}
+								],
+								"url": {
+									"raw": "{{base_url}}/api/v1/tweets/tweet-1234567890",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"tweets",
+										"tweet-1234567890"
+									]
+								}
+							},
+							"status": "No Content",
+							"code": 204,
+							"_postman_previewlanguage": "json",
+							"header": [],
+							"cookie": [],
+							"body": ""
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "Follow System",
+			"item": [
+				{
+					"name": "Follow User",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "X-User-ID",
+								"value": "{{user_id}}"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/v1/users/{{target_user_id}}/follow",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"users",
+								"{{target_user_id}}",
+								"follow"
+							]
+						},
+						"description": "Follow a user. Requires X-User-ID header. Creates an asymmetric follow relationship."
+					},
+					"response": [
+						{
+							"name": "User Followed Successfully",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "X-User-ID",
+										"value": "user-1234567890"
+									}
+								],
+								"url": {
+									"raw": "{{base_url}}/api/v1/users/user-0987654321/follow",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"users",
+										"user-0987654321",
+										"follow"
+									]
+								}
+							},
+							"status": "Created",
+							"code": 201,
+							"_postman_previewlanguage": "json",
+							"header": [],
+							"cookie": [],
+							"body": "{\n  \"id\": \"follow-1234567890\",\n  \"follower_id\": \"user-1234567890\",\n  \"followed_id\": \"user-0987654321\",\n  \"created_at\": \"2024-01-01T11:00:00Z\"\n}"
+						}
+					]
+				},
+				{
+					"name": "Unfollow User",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "X-User-ID",
+								"value": "{{user_id}}"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/v1/users/{{target_user_id}}/follow",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"users",
+								"{{target_user_id}}",
+								"follow"
+							]
+						},
+						"description": "Unfollow a user. Requires X-User-ID header. Removes the follow relationship."
+					},
+					"response": [
+						{
+							"name": "User Unfollowed Successfully",
+							"originalRequest": {
+								"method": "DELETE",
+								"header": [
+									{
+										"key": "X-User-ID",
+										"value": "user-1234567890"
+									}
+								],
+								"url": {
+									"raw": "{{base_url}}/api/v1/users/user-0987654321/follow",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"users",
+										"user-0987654321",
+										"follow"
+									]
+								}
+							},
+							"status": "No Content",
+							"code": 204,
+							"_postman_previewlanguage": "json",
+							"header": [],
+							"cookie": [],
+							"body": ""
+						}
+					]
+				},
+				{
+					"name": "Get Following List",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/v1/users/{{user_id}}/following",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"users",
+								"{{user_id}}",
+								"following"
+							]
+						},
+						"description": "Get the list of users that the specified user is following."
+					},
+					"response": [
+						{
+							"name": "Following List Retrieved",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}/api/v1/users/user-1234567890/following",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"users",
+										"user-1234567890",
+										"following"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [],
+							"cookie": [],
+							"body": "[\n  {\n    \"id\": \"follow-1234567890\",\n    \"follower_id\": \"user-1234567890\",\n    \"followed_id\": \"user-0987654321\",\n    \"created_at\": \"2024-01-01T11:00:00Z\"\n  },\n  {\n    \"id\": \"follow-2345678901\",\n    \"follower_id\": \"user-1234567890\",\n    \"followed_id\": \"user-1111111111\",\n    \"created_at\": \"2024-01-01T11:30:00Z\"\n  }\n]"
+						}
+					]
+				},
+				{
+					"name": "Get Followers List",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/v1/users/{{user_id}}/followers",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"users",
+								"{{user_id}}",
+								"followers"
+							]
+						},
+						"description": "Get the list of users that are following the specified user."
+					},
+					"response": [
+						{
+							"name": "Followers List Retrieved",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}/api/v1/users/user-1234567890/followers",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"users",
+										"user-1234567890",
+										"followers"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [],
+							"cookie": [],
+							"body": "[\n  {\n    \"id\": \"follow-3456789012\",\n    \"follower_id\": \"user-0987654321\",\n    \"followed_id\": \"user-1234567890\",\n    \"created_at\": \"2024-01-01T12:00:00Z\"\n  },\n  {\n    \"id\": \"follow-4567890123\",\n    \"follower_id\": \"user-1111111111\",\n    \"followed_id\": \"user-1234567890\",\n    \"created_at\": \"2024-01-01T12:30:00Z\"\n  }\n]"
+						}
+					]
+				},
+				{
+					"name": "Check If Following",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/v1/users/{{user_id}}/following/{{target_user_id}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"users",
+								"{{user_id}}",
+								"following",
+								"{{target_user_id}}"
+							]
+						},
+						"description": "Check if user A is following user B. Returns follow relationship if exists."
+					},
+					"response": [
+						{
+							"name": "Following Relationship Found",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}/api/v1/users/user-1234567890/following/user-0987654321",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"users",
+										"user-1234567890",
+										"following",
+										"user-0987654321"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [],
+							"cookie": [],
+							"body": "{\n  \"id\": \"follow-1234567890\",\n  \"follower_id\": \"user-1234567890\",\n  \"followed_id\": \"user-0987654321\",\n  \"created_at\": \"2024-01-01T11:00:00Z\"\n}"
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "Timeline",
+			"item": [
+				{
+					"name": "Get Timeline",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/v1/users/{{user_id}}/timeline?limit=20",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"users",
+								"{{user_id}}",
+								"timeline"
+							],
+							"query": [
+								{
+									"key": "limit",
+									"value": "20",
+									"description": "Number of tweets to return (default: 20, max: 100)"
+								}
+							]
+						},
+						"description": "Get the personalized timeline for a user. Shows tweets from users they follow, sorted by creation time. Supports pagination with limit parameter."
+					},
+					"response": [
+						{
+							"name": "Timeline Retrieved",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}/api/v1/users/user-1234567890/timeline?limit=20",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"users",
+										"user-1234567890",
+										"timeline"
+									],
+									"query": [
+										{
+											"key": "limit",
+											"value": "20"
+										}
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [],
+							"cookie": [],
+							"body": "{\n  \"user_id\": \"user-1234567890\",\n  \"tweets\": [\n    {\n      \"id\": \"tweet-2345678901\",\n      \"user_id\": \"user-0987654321\",\n      \"content\": \"Latest tweet from someone I follow! 🚀\",\n      \"created_at\": \"2024-01-01T13:00:00Z\",\n      \"is_deleted\": false\n    },\n    {\n      \"id\": \"tweet-3456789012\",\n      \"user_id\": \"user-1111111111\",\n      \"content\": \"Another tweet in my timeline 📱\",\n      \"created_at\": \"2024-01-01T12:45:00Z\",\n      \"is_deleted\": false\n    }\n  ],\n  \"last_updated\": \"2024-01-01T13:05:00Z\"\n}"
+						}
+					]
+				},
+				{
+					"name": "Refresh Timeline",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "X-User-ID",
+								"value": "{{user_id}}"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/api/v1/users/{{user_id}}/timeline/refresh",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"users",
+								"{{user_id}}",
+								"timeline",
+								"refresh"
+							]
+						},
+						"description": "Manually refresh the timeline cache for a user. Requires X-User-ID header. Forces regeneration of the timeline."
+					},
+					"response": [
+						{
+							"name": "Timeline Refreshed Successfully",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "X-User-ID",
+										"value": "user-1234567890"
+									}
+								],
+								"url": {
+									"raw": "{{base_url}}/api/v1/users/user-1234567890/timeline/refresh",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"users",
+										"user-1234567890",
+										"timeline",
+										"refresh"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [],
+							"cookie": [],
+							"body": "{\n  \"message\": \"Timeline refreshed successfully\"\n}"
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "Error Examples",
+			"item": [
+				{
+					"name": "Validation Error Example",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"username\": \"\",\n  \"display_name\": \"\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/v1/users",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"users"
+							]
+						},
+						"description": "Example of a validation error when creating a user with empty fields."
+					},
+					"response": [
+						{
+							"name": "Validation Error",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"username\": \"\",\n  \"display_name\": \"\"\n}"
+								},
+								"url": {
+									"raw": "{{base_url}}/api/v1/users",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"users"
+									]
+								}
+							},
+							"status": "Bad Request",
+							"code": 400,
+							"_postman_previewlanguage": "json",
+							"header": [],
+							"cookie": [],
+							"body": "{\n  \"error\": \"validation_error\",\n  \"message\": \"username and display name cannot be empty\",\n  \"details\": \"\"\n}"
+						}
+					]
+				},
+				{
+					"name": "Not Found Error Example",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/api/v1/users/nonexistent-user-id",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"users",
+								"nonexistent-user-id"
+							]
+						},
+						"description": "Example of a not found error when trying to get a user that doesn't exist."
+					},
+					"response": [
+						{
+							"name": "Not Found Error",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{base_url}}/api/v1/users/nonexistent-user-id",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"users",
+										"nonexistent-user-id"
+									]
+								}
+							},
+							"status": "Not Found",
+							"code": 404,
+							"_postman_previewlanguage": "json",
+							"header": [],
+							"cookie": [],
+							"body": "{\n  \"error\": \"not_found_error\",\n  \"message\": \"User not found\",\n  \"details\": \"\"\n}"
+						}
+					]
+				},
+				{
+					"name": "Rate Limit Error Example",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "X-User-ID",
+								"value": "{{user_id}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"content\": \"This would be blocked by rate limiting after too many requests\"\n}"
+						},
+						"url": {
+							"raw": "{{base_url}}/api/v1/tweets",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"tweets"
+							]
+						},
+						"description": "Example of a rate limit error when creating too many tweets in a short time period."
+					},
+					"response": [
+						{
+							"name": "Rate Limit Error",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									},
+									{
+										"key": "X-User-ID",
+										"value": "user-1234567890"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"content\": \"This would be blocked by rate limiting after too many requests\"\n}"
+								},
+								"url": {
+									"raw": "{{base_url}}/api/v1/tweets",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"api",
+										"v1",
+										"tweets"
+									]
+								}
+							},
+							"status": "Too Many Requests",
+							"code": 429,
+							"_postman_previewlanguage": "json",
+							"header": [],
+							"cookie": [],
+							"body": "{\n  \"error\": \"validation_error\",\n  \"message\": \"Rate limit exceeded for tweet_create operation\",\n  \"details\": \"\"\n}"
+						}
+					]
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "base_url",
+			"value": "http://localhost:8080",
+			"type": "string"
+		},
+		{
+			"key": "user_id",
+			"value": "user-1234567890",
+			"type": "string"
+		},
+		{
+			"key": "target_user_id",
+			"value": "user-0987654321",
+			"type": "string"
+		},
+		{
+			"key": "tweet_id",
+			"value": "tweet-1234567890",
+			"type": "string"
+		}
+	]
+} 
