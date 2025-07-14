@@ -91,13 +91,14 @@ POST /api/v1/users/{id}/timeline/refresh   # Refresh timeline
 
 ### Example Usage
 
-#### Import postman collection 
+#### Import postman collection
 
 ```bash
 Tuity.postman_collection.json
 ```
 
 #### Curl
+
 ```bash
 # Create a user
 curl -X POST http://localhost:8080/api/v1/users \
@@ -121,7 +122,7 @@ make test              # Run tests
 make test-coverage     # Run with coverage
 ```
 
-## 🔮 Future Scalability[WIP]
+## 🔮 Future Scalability ([Architecture Details](ARCHITECTURE_FUTURE.md))
 
 -**WIP scaling**: Database sharding, hashing, redis, cdn, rate limit, 1 million users
 
