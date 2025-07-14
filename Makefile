@@ -12,7 +12,6 @@ help:
 	@echo "  make clean          - Clean build artifacts"
 	@echo "  make docker-build   - Build Docker image"
 	@echo "  make docker-run     - Run with Docker Compose"
-	@echo "  make docker-dev     - Run development environment"
 	@echo "  make docker-stop    - Stop Docker containers"
 	@echo "  make help           - Show this help"
 
@@ -66,10 +65,6 @@ docker-build:
 docker-run:
 	@echo "🐳 Running with Docker Compose..."
 	docker-compose up -d
-
-docker-dev:
-	@echo "🐳 Running development environment..."
-	docker-compose --profile dev up -d tuity-dev
 
 docker-stop:
 	@echo "🐳 Stopping Docker containers..."
