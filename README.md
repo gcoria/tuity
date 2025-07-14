@@ -43,9 +43,6 @@ The API will be available at `http://localhost:8080`
 # Build and run
 make docker-build
 make docker-run
-
-# Development mode
-make docker-dev
 ```
 
 ## 📡 API Documentation
